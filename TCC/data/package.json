@@ -1,6 +1,0 @@
-{
-  "devDependencies": {
-    "json-server": "^1.0.0-beta.3",
-    "server": "json-server --watch data/db.json"
-  }
-}
