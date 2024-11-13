@@ -1,0 +1,70 @@
+.navbar {
+    display: flex;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px -2px 10px 0px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em 2em;
+  }
+  
+  .brand {
+    font-size: 1.2em;
+  }
+  
+  .brand span {
+    font-weight: 900;
+    text-transform: uppercase;
+ 
+  }
+  
+  .links_list {
+    display: flex;
+    list-style: none;
+  }
+  
+  .links_list li {
+    margin-right: 1em;
+  }
+  
+  .links_list li a {
+    padding: 0.4em 0.6em;
+  }
+  
+  .active {
+    background-color: #000;
+    color: #fff;
+  }
+  .navbar-logo {
+    display: flex !important;
+    align-items: center !important;
+  }
+  /* Estilos do modo noturno */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.navbar {
+  background-color: #f0f0f0;
+}
+
+body.dark-mode .navbar {
+  background-color: #333;
+}
+.navbar-logo {
+  display: flex;
+  align-items: center; /* Alinha a imagem e o texto verticalmente ao centro */
+}
+.logo-image {
+  width: 50px; /* Tamanho do logo */
+  height: auto;
+  margin-right: 20px !important; /* Espaçamento entre o logo e o texto */
+}
+
+/* Estilos para o texto */
+.navbar-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  line-height: 1; /* Garante que o texto fique na mesma altura vertical */
+  margin-top: -3px; /* Ajuste fino para centralizar melhor com a logo */
+}

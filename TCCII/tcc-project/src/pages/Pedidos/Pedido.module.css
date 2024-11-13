@@ -1,0 +1,13 @@
+.pedidos {
+    text-align: center;
+  }
+  
+  .pedidos p {
+    color: #4e4c4c;
+  }
+  .pedidos span{
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  

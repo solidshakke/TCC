@@ -1,0 +1,9 @@
+.fornecedor{
+    text-align: center;
+}
+label span {
+    margin-bottom: 0.3em;
+    font-weight: bold;
+    text-align: left;
+    margin-top: 0.3em;
+  }

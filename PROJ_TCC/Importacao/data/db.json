@@ -1,0 +1,64 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "pedido": "4700002000",
+      "fornecedor": "Kadant",
+      "invoice": "43227",
+      "data_invoice": "02/11/2024",
+      "data_prontidao": "02/11/2024",
+      "etd": "11/11/2024",
+      "eta": "14/11/2024"
+    },
+    {
+      "id": 2,
+      "pedido": "4700002001",
+      "fornecedor": "Dieffenbacher",
+      "invoice": "10000475",
+      "data_invoice": "02/11/2024",
+      "data_prontidao": "02/11/2024",
+      "etd": "11/11/2024",
+      "eta": "14/11/2024"
+    },
+    {
+      "id": 3,
+      "pedido": "4700002002",
+      "fornecedor": "Tapel",
+      "invoice": "732",
+      "data_invoice": "02/11/2024",
+      "data_prontidao": "02/11/2024",
+      "etd": "11/11/2024",
+      "eta": "14/11/2024"
+    },
+    {
+      "id": 4,
+      "pedido": "4700002003",
+      "fornecedor": "LP Chile",
+      "invoice": "LPCH 703",
+      "data_invoice": "02/11/2024",
+      "data_prontidao": "02/11/2024",
+      "etd": "11/11/2024",
+      "eta": "14/11/2024"
+    },
+    {
+      "pedido": "4700001800",
+      "fornecedor": "LP Chile",
+      "invoice": "LPCH333",
+      "data_invoice": "2024-11-05",
+      "data_prontidao": "2024-11-05",
+      "etd": "2024-11-12",
+      "eta": "2024-11-26",
+      "id": 5
+    },
+    {
+      "pedido": "4700001899",
+      "fornecedor": "Kadant",
+      "invoice": "795123",
+      "data_invoice": "",
+      "data_prontidao": "",
+      "etd": "",
+      "eta": "",
+      "id": 6
+    }
+  ]
+}

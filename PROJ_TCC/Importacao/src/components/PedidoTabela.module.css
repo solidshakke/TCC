@@ -1,0 +1,15 @@
+.table th {
+    background-color: #9cc4e4;
+    text-align: left;
+  }
+
+  .table th,
+  .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  .table{
+    margin-bottom: 10px;
+    font-size: small;
+  }
