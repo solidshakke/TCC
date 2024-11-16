@@ -6,3 +6,7 @@
     justify-content: center;
     background-color: #edf3f6;
   }
+  .dataatual{
+    align-items: flex-start;
+    background-color: black;
+  }

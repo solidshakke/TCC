@@ -41,6 +41,9 @@ const Navbar = () => {
                     <NavLink to="/create/pedido" className={({ isActive }) => (isActive ? styles.active : "")}> Pedidos </NavLink>
                 </li>
                 <li>
+                    <NavLink to="/dashboard/pedido" className={({ isActive }) => (isActive ? styles.active : "")}> Dashboard </NavLink>
+                </li>
+                <li>
                     <NavLink to="/create/fornecedor" className={({ isActive }) => (isActive ? styles.active : "")}> Fornecedor </NavLink>
                 </li>
                 <li>
