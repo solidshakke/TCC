@@ -1,25 +1,44 @@
 import styles from './Pedido.module.css';
 import React from 'react'
 import { POST_PEDIDO } from '../../components/api';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useFetch2 from '../../hooks/useFetch2';
+import { GET_FORNECEDOR } from '../../components/api';
+
 
 
 const Pedido = () => {
     const [pedido, setPedido] = useState("");
-    const [fornecedor, setFornecedor] = useState("");
+    const [fornecedor, setFornecedor] = useState(0);
     const [invoice, setInvoice] = useState("");
     const [data_invoice, setDataInvoice] = useState("");
     const [data_prontidao, setDataProntidao] = useState("");
     const [etd, setEtd] = useState("");
     const [eta, setEta] = useState("");
-    const { data, success, loading, error, request } = useFetch2;
+
+    const { data, success, loading, error, request } = useFetch2 ();
+    const [datas, setDatas] = useState([]);
+
+    
+    useEffect(() => {
+        async function listPedidos (){
+            const {url, options} = GET_FORNECEDOR ({
+                requisicao:"GET_FORNECEDOR"
+            });
+            const {json, response} = await request (url, options);
+            if (json.success){
+                setDatas(json.result);
+                console.log(datas);
+            } else {console.log("Deu ruim")}                                        
+        }
+        listPedidos();
+    }, [])
 
     async function handleSalvar(){
       const {url, options} = POST_PEDIDO({
         requisicao: 'POST_PEDIDO',
         pedido: pedido,
-        fornecedor: fornecedor,
+        cod_fornecedor: Number(fornecedor),
         invoice: invoice,
         data_invoice: data_invoice,
         data_prontidao: data_prontidao,
@@ -48,18 +67,26 @@ const Pedido = () => {
       }
      console.log (json);
     }
+
+  
   return (
     <div className={styles.pedidos}>
       <h1>Criar Pedido</h1>
-      <form >
-        <div>
+      {/*<form>*/}
+        <div className={styles.form}>
             <label>   
                 <span>Pedido: </span>
                 <input type="text" name="pedido" placeholder="Digite o nº do Pedido" required onChange={(e) => setPedido(e.target.value)} value={pedido}/>
             </label>
             <label>   
                 <span>Fornecedor: </span>
-                <input type="text" name="fornecedor" placeholder="Digite o nome do Fornecedor" required onChange={(e) => setFornecedor(e.target.value)} value={fornecedor}/>
+                <select value={fornecedor} onChange={(e) => setFornecedor(e.target.value)} >
+                <option value="">Selecione um Fornecedor</option>
+                {datas.map((fornecedor) => (
+                    <option key={fornecedor.cod_fornecedor} value={fornecedor.cod_fornecedor}>{fornecedor.nome}</option>
+                ))}
+            </select>
+                {/* <input type="text" name="fornecedor" placeholder="Digite o nome do Fornecedor" required onChange={(e) => setFornecedor(e.target.value)} value={fornecedor}/> */}
             </label>
             <label>   
                 <span>Invoice: </span>
@@ -83,9 +110,10 @@ const Pedido = () => {
             </label>
             <button className="btn" onClick={handleSalvar}>Salvar</button>
         </div>
-    </form>
-
+      {/*</form>*/}
+      {/* <div><h1>Código selecionado: {fornecedor}</h1></div> TESTE FORNECEDOR SELECIONADO */}
 </div>
+
   )
 }
 
