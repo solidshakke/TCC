@@ -7,3 +7,7 @@ label span {
     text-align: left;
     margin-top: 0.3em;
   }
+  .form {
+    max-width: 40%;
+    margin: 0 auto;
+  }
