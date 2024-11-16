@@ -18,11 +18,20 @@ import Fornecedor from './pages/Fornecedores/Fornecedor';
 import Register from './pages/Register/Register';
 import Materiais from './pages/Materiais/Materiais';
 import Pedido from './pages/Pedidos/Pedido';
-
+import PedidoEdit from './pages/Pedidos/PedidoEdit';
+import Dasboard from './pages/Pedidos/Dasboard';
+import FornecedorEdit from './pages/Fornecedores/FornecedorEdit';
+import MateriaisEdit from './pages/Materiais/MateriaisEdit';
+import TestePedido from './pages/Pedidos/TestePedido';
+import TestePedido_2 from './pages/Pedidos/TestePedido_2';
 
 //components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+
+
+
+
 
 
 
@@ -50,11 +59,16 @@ function App() {
             <Routes>
               <Route path="/" element={user ? <Home /> : <Navigate to="/login" /> } />
               <Route path="/about" element={<About />} />
+              <Route path="/teste" element={<TestePedido/>} />
               <Route path="/login" element={!user ? <Login /> : <Navigate to="/" /> } />
               <Route path="/register" element={!user ? <Register /> : <Navigate to="/" /> } />
               <Route path="/create/pedido" element={user ? <Pedido /> : <Navigate to="/login" /> } />
+              <Route path="/dashboard/pedido" element={user ? <Dasboard /> : <Navigate to="/login" /> } />
+              <Route path="/edit/pedido" element={user ? <PedidoEdit /> : <Navigate to="/login" /> } />
               <Route path="/create/fornecedor" element={user ? <Fornecedor /> : <Navigate to="/login" /> } />
+              <Route path="/edit/fornecedor" element={<FornecedorEdit/>} />
               <Route path="/create/materiais" element={user ? <Materiais /> : <Navigate to="/login" /> } />
+              <Route path="/edit/materiais" element={<MateriaisEdit/>} />
             </Routes>
           </div>
         <Footer />

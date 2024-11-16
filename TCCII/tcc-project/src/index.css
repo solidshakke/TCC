@@ -37,6 +37,7 @@ body {
     max-width: 40%;
     margin: 0 auto;
   }
+
   
   label {
     display: flex;
@@ -50,8 +51,7 @@ body {
     text-align: left;
   }
   
-  input,
-  textarea {
+  input {
     box-sizing: border-box;
     border: none;
     border-bottom: 1px solid #ccc;
@@ -59,9 +59,8 @@ body {
     background-color: transparent;
   }
   
-  input::placeholder,
-  textarea::placeholder {
-    color: #aaa;
+  input::placeholder {
+    color: #252525;
   }
   
   .btn {
@@ -115,3 +114,4 @@ body {
     border-radius: 5px;
     font-weight: bold;
   }
+
