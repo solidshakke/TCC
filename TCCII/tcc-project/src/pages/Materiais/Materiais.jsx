@@ -3,6 +3,7 @@ import React from 'react'
 import { POST_MATERIAL } from '../../components/api';
 import { useState } from 'react';
 import useFetch2 from '../../hooks/useFetch2';
+import Showmateriais from './ShowMateriais';
 
 
 const Materiais = () => {
@@ -16,7 +17,7 @@ const Materiais = () => {
         requisicao: 'POST_MATERIAL',
         cod_sap: cod_sap,
         nome: nome,
-        nm: ncm,
+        ncm: ncm,
         cfop: cfop,
        })
       const {json, response} = await request(url, options);
@@ -33,8 +34,8 @@ const Materiais = () => {
   return (
     <div className={styles.material}>
       <h1>Cadastro de Material</h1>
-  <form>
-    <div>
+  {/*<form>*/}
+    <div className={styles.form}>
       <label>   
           <span>Código do Material: </span>
           <input type="text" name="cod_sap" placeholder="Digite o código do Material" onChange={(e) => setCodSap(e.target.value)} value={cod_sap}/>
@@ -53,7 +54,8 @@ const Materiais = () => {
       </label>
       <button className="btn" onClick={handleSalvar}>Salvar</button>
   </div>
-</form>
+  {/*</form>*/}
+  <Showmateriais />
 </div>
   )
 }
