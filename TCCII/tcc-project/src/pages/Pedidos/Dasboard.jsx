@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Dashboard.module.css';
 import useFetch2 from '../../hooks/useFetch2';
-import { GET_PEDIDOS } from '../../components/api';
+import { GET_PEDIDOS, PUT_PEDIDO_INATIVO } from '../../components/api';
 import { Navigate, useNavigate} from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 const Dashboard = () => {
 
@@ -41,11 +42,13 @@ const Dashboard = () => {
         setSelectedPedido(null);
     };
 
-    const handleView = () => {
+    const handleView = (cod) => {
         // Função de Visualizar Pedido
-        alert(`Visualizar detalhes do pedido: ${selectedPedido.cod_pedido}`); {/* mudar cod_pedido para PO */}
+        alert(`Visualizar detalhes do pedido: ${cod}`); {/* mudar cod_pedido para PO */}
         // Aqui você poderia redirecionar para uma página de detalhes do pedido, por exemplo:
         // window.location.href = `/pedido/${selectedPedido.PO}`;
+        navigate (`/show/pedido?cod=${cod}`)
+
         closeModal();
     };
 
@@ -58,22 +61,52 @@ const Dashboard = () => {
         
         closeModal();  
     };
-    
 
-    const handleDelete = () => {
+    function msgDelete(cod, PO){
+        Swal.fire({
+            title: "Deseja excluir o pedido " + PO + "?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Inativar",
+            denyButtonText: "Manter"
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                handleDelete(cod);
+
+            } else if (result.isDenied) {
+                Swal.fire("Opção de exclusão cancelada", "", "info");
+            }
+        });
+    }
+    function mensagemOK(msg) {
+        Swal.fire({
+          text: msg,
+          icon: "success"
+          }).then((result) => {
+          if (result.isConfirmed) {
+              window.location.reload();
+          }
+      });
+      }
+
+     async function handleDelete (cod) {
         // Função de Excluir Pedido
-        const confirmDelete = window.confirm(`Tem certeza de que deseja excluir o pedido: ${selectedPedido.PO}?`); 
-        if (confirmDelete) {
-            // Lógica para excluir o pedido
-            // Exemplo: Remover o pedido do estado local
-            setDatas(prevDatas => prevDatas.filter(pedido => pedido.PO !== selectedPedido.PO));
-            alert(`Pedido ${selectedPedido.PO} excluído com sucesso!`);
-            closeModal();
-        }
+        const {url, options} = PUT_PEDIDO_INATIVO ({
+        requisicao: 'PUT_PEDIDO_INATIVO',
+        cod_pedido: cod
+        });
+        const {json} = await request (url, options);
+        if (json.success) {
+            mensagemOK("Excluido com sucesso!");
+            
+        } else {console.log(json.error)};
+
     };
 
     return (
-        <div>
+        <div classname={styles.titulo}> 
+            <h1>Lista de Pedidos: </h1>
             {datas && (
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
@@ -111,9 +144,9 @@ const Dashboard = () => {
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                         <h3>Opções do Pedido</h3>
                         <p>Pedido: {selectedPedido?.cod_pedido}</p> {/* mudar cod_pedido para PO */}
-                        <button onClick={handleView}>Visualizar Pedido</button>
+                        <button onClick={() => handleView (selectedPedido?.cod_pedido)}>Visualizar Pedido</button>
                         <button onClick={() => handleEdit (selectedPedido?.cod_pedido)}>Editar Pedido</button>
-                        <button onClick={handleDelete}>Excluir Pedido</button>
+                        <button onClick={() => msgDelete (selectedPedido?.cod_pedido, selectedPedido?.PO)}>Excluir Pedido</button>
                         <button className={styles.closeButton} onClick={closeModal}>Fechar</button>
                     </div>
                 </div>

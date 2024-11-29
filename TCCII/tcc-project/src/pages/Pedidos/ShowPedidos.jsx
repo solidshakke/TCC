@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import useFetch2 from '../../hooks/useFetch2';
 import { POST_PEDIDO, GET_FORNECEDOR, GET_MATERIAL, PUT_PEDIDO, GET_PEDIDOS_BY_ID, GET_MATERIAL_BY_ID_PEDIDO } from '../../components/api';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import Swal from 'sweetalert2'
 
 
-const PedidoEdit = () => {
+
+const ShowPedidos = () => {
     const [searchParams] = useSearchParams();
     const cod_pedido = searchParams.get('cod')
 
@@ -197,12 +197,15 @@ const PedidoEdit = () => {
       const {json, response} = await request (url, options);
 
       if (json.success){
-        mensagemOK("Pedido salvo com sucesso!")
-        navigate (`/dashboard/pedido`)
+        console.log('Deu boa');
       } else {
         console.log('Deu ruim');
       }
      console.log(json);
+    }
+
+    function handleVoltar () {
+        navigate ('/dashboard/pedido');
     }
 
     function preencher_campos(json){
@@ -233,17 +236,6 @@ const PedidoEdit = () => {
         setDataDocEmbarque(json[0].data_doc_embarque);
 
     }
-
-    function mensagemOK(msg) {
-        Swal.fire({
-          text: msg,
-          icon: "success"
-          }).then((result) => {
-          if (result.isConfirmed) {
-            //   window.location.reload();
-          }
-      });
-      }
   
   return (
     <div className={styles.pedidos}>
@@ -252,7 +244,7 @@ const PedidoEdit = () => {
         <div className={styles.form}>
             <label>   
                 <span>Pedido: </span>
-                <input type="text" name="pedido" placeholder="Digite o nº do Pedido" required onChange={(e) => setPedido(e.target.value)} value={pedido}/>
+                <input type="text" name="pedido" placeholder="Digite o nº do Pedido" required onChange={(e) => setPedido(e.target.value)} value={pedido} readOnly/>
             </label>
             <label>   
                 <span>Fornecedor: </span>
@@ -262,19 +254,19 @@ const PedidoEdit = () => {
                     <option key={fornecedor.cod_fornecedor} value={fornecedor.cod_fornecedor}>{fornecedor.nome}</option>
                 ))}
             </select>
-                {/* <input type="text" name="fornecedor" placeholder="Digite o nome do Fornecedor" required onChange={(e) => setFornecedor(e.target.value)} value={fornecedor}/> */}
+
             </label>
             <label>   
                 <span>Invoice: </span>
-                <input type="text" name="invoice" placeholder="Digite o nº da Invoice" onChange={(e) => setInvoice(e.target.value)} value={invoice}/>
+                <input type="text" name="invoice" placeholder="Digite o nº da Invoice" onChange={(e) => setInvoice(e.target.value)} value={invoice} readOnly/>
             </label>
             <label>   
                 <span>Data da Invoice: </span>
-                <input type="date" name="data_invoice" placeholder="Digite a data da Invoice" onChange={(e) => setDataInvoice(e.target.value)} value={data_invoice}/>
+                <input type="date" name="data_invoice" placeholder="Digite a data da Invoice" onChange={(e) => setDataInvoice(e.target.value)} value={data_invoice} readOnly/>
             </label>
             <label>   
                 <span>Vencimento da Invoice: </span> {/* Condição de Pegar a data da invocie + a condição de pagamento */}
-                <input type="date" name="vencimento_invoice" placeholder="Digite a data do Vencimento da Invoice" onChange={(e) => setVencimentoInvoice(e.target.value)} value={vencimento_invoice}/>
+                <input type="date" name="vencimento_invoice" placeholder="Digite a data do Vencimento da Invoice" onChange={(e) => setVencimentoInvoice(e.target.value)} value={vencimento_invoice} readOnly/>
             </label>
             <label>   
             <label>   
@@ -301,15 +293,15 @@ const PedidoEdit = () => {
                     </ul>
                 </div>
                 <span>Data de Prontidão: </span>
-                <input type="date" name="data_prontidao" placeholder="Digite a data de Prontidão do Pedido" onChange={(e) => setDataProntidao(e.target.value)} value={data_prontidao}/>
+                <input type="date" name="data_prontidao" placeholder="Digite a data de Prontidão do Pedido" onChange={(e) => setDataProntidao(e.target.value)} value={data_prontidao} readOnly/>
             </label>
             <label>   
                 <span>ETD: </span>
-                <input type="date" name="etd" onChange={(e) => setEtd(e.target.value)} value={etd}/>
+                <input type="date" name="etd" onChange={(e) => setEtd(e.target.value)} value={etd} readOnly/>
             </label>
             <label>   
                 <span>ETA: </span>
-                <input type="date" name="eta" onChange={(e) => setEta(e.target.value)} value={eta}/>
+                <input type="date" name="eta" onChange={(e) => setEta(e.target.value)} value={eta} readOnly/>
             </label>
             <label>   
                 <span>Selecione o Modal: </span>
@@ -320,47 +312,47 @@ const PedidoEdit = () => {
             </label>
             <label>   
                 <span>Nº do AWB / BL / CRT : </span>
-                <input type="text" name="crt_bl_awb" placeholder="Digite o nº do documento de embarque" onChange={(e) => setCrtBlAwb(e.target.value)} value={crt_bl_awb}/>
+                <input type="text" name="crt_bl_awb" placeholder="Digite o nº do documento de embarque" onChange={(e) => setCrtBlAwb(e.target.value)} value={crt_bl_awb} readOnly/>
             </label>
             <label>   
                 <span>Data do conhecimento de embarque: </span>
-                <input type="date" name="data_doc_embarque" onChange={(e) => setDataDocEmbarque(e.target.value)} value={data_doc_embarque}/>
+                <input type="date" name="data_doc_embarque" onChange={(e) => setDataDocEmbarque(e.target.value)} value={data_doc_embarque} readOnly/>
             </label>
             <label>   
                 <span>Valor: </span>
-                <input type="number" name="valor" onChange={(e) => setValor(e.target.value)} value={valor}/>
+                <input type="number" name="valor" onChange={(e) => setValor(e.target.value)} value={valor} readOnly/>
             </label>
             <label>   
                 <span>Condição de Pagamento: </span>
-                <input type="text" name="condicao_pagamento" placeholder="Digite a condiçaõ de Pagamento" onChange={(e) => setCondicaoPagamento(e.target.value)} value={condicao_pagamento}/>
+                <input type="text" name="condicao_pagamento" placeholder="Digite a condiçaõ de Pagamento" onChange={(e) => setCondicaoPagamento(e.target.value)} value={condicao_pagamento} readOnly/>
             </label>
             <label>   
                 <span>Pagamento Antecipado: </span>
-                <input type="text" name="percentual_pag_antecipado" placeholder="Percentual do Pagamento Antecipado" onChange={(e) => setPercentualPagAntecipado(e.target.value)} value={percentual_pag_antecipado}/>
+                <input type="text" name="percentual_pag_antecipado" placeholder="Percentual do Pagamento Antecipado" onChange={(e) => setPercentualPagAntecipado(e.target.value)} value={percentual_pag_antecipado} readOnly/>
             </label>
             <label>   
                 <span>Data do Pagamento: </span>
-                <input type="date" name="data_pagamento" onChange={(e) => setDataPagamento(e.target.value)} value={data_pagamento}/>
+                <input type="date" name="data_pagamento" onChange={(e) => setDataPagamento(e.target.value)} value={data_pagamento} readOnly/>
             </label>
             <label>   
                 <span>DI: </span>
-                <input type="text" name="di" placeholder="Digite o nº da DI" onChange={(e) => setDi(e.target.value)} value={di}/>
+                <input type="text" name="di" placeholder="Digite o nº da DI" onChange={(e) => setDi(e.target.value)} value={di} readOnly/>
             </label>
             <label>   
                 <span>Data do registro da DI: </span>
-                <input type="date" name="data_registro_di" onChange={(e) => setDataRegistroDi(e.target.value)} value={data_registro_di}/>
+                <input type="date" name="data_registro_di" onChange={(e) => setDataRegistroDi(e.target.value)} value={data_registro_di} readOnly/>
             </label>
             <label>   
                 <span>Data da Liberação: </span>
-                <input type="date" name="data_liberacao" onChange={(e) => setDataLiberacao(e.target.value)} value={data_liberacao}/>
+                <input type="date" name="data_liberacao" onChange={(e) => setDataLiberacao(e.target.value)} value={data_liberacao} readOnly/>
             </label>
             <label>   
                 <span>Canal: </span>
-                <input type="text" name="canal" placeholder="Digite o canal do processo" onChange={(e) => setCanal(e.target.value)} value={canal}/>
+                <input type="text" name="canal" placeholder="Digite o canal do processo" onChange={(e) => setCanal(e.target.value)} value={canal} readOnly/>
             </label>
             <label>   
                 <span>Data da Entrega do Pedido na Planta: </span>
-                <input type="date" name="data_entrega_planta" onChange={(e) => setDataEntregaPlanta(e.target.value)} value={data_entrega_planta}/>
+                <input type="date" name="data_entrega_planta" onChange={(e) => setDataEntregaPlanta(e.target.value)} value={data_entrega_planta} readOnly/>
             </label>
             <label>
                 <span>Dias Entrega: </span>
@@ -368,7 +360,7 @@ const PedidoEdit = () => {
             </label>
             <label>   
                 <span>Data da MIGO: </span>
-                <input type="date" name="data_migo" onChange={(e) => setDataMigo(e.target.value)} value={data_migo}/>
+                <input type="date" name="data_migo" onChange={(e) => setDataMigo(e.target.value)} value={data_migo} readOnly/>
             </label>
             <label>   
                 <span>Dias MIGO: </span> {/* Condição data_migo - data_entrega_planta */}
@@ -376,19 +368,18 @@ const PedidoEdit = () => {
             </label>
             <label>   
                 <span>Nota Fiscal: </span>
-                <input type="number" name="nota_fiscal" placeholder="Digite o nº da DANFe" onChange={(e) => setNotaFiscal(e.target.value)} value={nota_fiscal}/>
+                <input type="number" name="nota_fiscal" placeholder="Digite o nº da DANFe" onChange={(e) => setNotaFiscal(e.target.value)} value={nota_fiscal} readOnly/>
             </label>
             <label>   
                 <span>Data da NF: </span>
-                <input type="date" name="data_nota_fiscal" onChange={(e) => setDataNotaFiscal(e.target.value)} value={data_nota_fiscal}/>
+                <input type="date" name="data_nota_fiscal" onChange={(e) => setDataNotaFiscal(e.target.value)} value={data_nota_fiscal} readOnly/>
             </label>
-            <button className="btn" onClick={handleSalvar}>Salvar</button>
+            <button className="btn" onClick={handleVoltar}>Voltar</button>
         </div>
-      {/*</form>*/}
-      {/* <div><h1>Código selecionado: {fornecedor}</h1></div> TESTE FORNECEDOR SELECIONADO */}
+
 </div>
 
   )
 }
 
-export default PedidoEdit;
+export default ShowPedidos;

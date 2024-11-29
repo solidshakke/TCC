@@ -4,7 +4,8 @@ import { POST_PEDIDO } from '../../components/api';
 import { useState, useEffect } from 'react';
 import useFetch2 from '../../hooks/useFetch2';
 import { GET_FORNECEDOR } from '../../components/api';
-
+import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom';
 
 
 const Pedido = () => {
@@ -18,6 +19,8 @@ const Pedido = () => {
 
     const { data, success, loading, error, request } = useFetch2 ();
     const [datas, setDatas] = useState([]);
+
+    const navigate = useNavigate();
 
     
     useEffect(() => {
@@ -34,6 +37,17 @@ const Pedido = () => {
         listPedidos();
     }, [])
 
+    function mensagemOK(msg) {
+        Swal.fire({
+          text: msg,
+          icon: "success"
+          }).then((result) => {
+          if (result.isConfirmed) {
+              navigate("/dashboard/pedido");
+          }
+      });
+      }
+
     async function handleSalvar(){
       const {url, options} = POST_PEDIDO({
         requisicao: 'POST_PEDIDO',
@@ -45,23 +59,12 @@ const Pedido = () => {
         etd: etd,
         eta: eta,
        })
-    //    const handleSubmit = async (e) => {
-    //     e.preventDefault ()
-    //       const product = {
-    //         pedido,
-    //         fornecedor,
-    //         invoice,
-    //         data_invoice,
-    //         data_prontidao,
-    //         etd,
-    //         eta,
-    //       };
+
       const {json, response} = await request (url, options);
-      //console.log(json);
-      //console.log(json.success);
-      //const message_aux = json.result;
+
       if (json.success){
-        console.log('Deu boa');
+        mensagemOK("Pedido salvo com sucesso!");
+        
       } else {
         console.log('Deu ruim');
       }
