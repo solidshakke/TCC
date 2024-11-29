@@ -87,8 +87,8 @@ const Home = () => {
                                     <p><strong>Número do Pedido:</strong> {pedido.PO}</p>
                                     <p><strong>Fornecedor:</strong> {pedido.fornecedor}</p>
                                     <p><strong>Modal:</strong> {pedido.modal}</p>
-                                    <p><strong>ETA:</strong> {new Date(pedido.eta).toLocaleDateString()}</p>
                                     <p><strong>ETD:</strong> {new Date(pedido.etd).toLocaleDateString()}</p>
+                                    <p><strong>ETA:</strong> {new Date(pedido.eta).toLocaleDateString()}</p>
                                 </li>
                             ))}
                         </ul>
