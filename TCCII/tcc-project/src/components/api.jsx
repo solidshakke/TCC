@@ -47,6 +47,18 @@ export function POST_PEDIDO(body){
       }
     }
   }
+  export function PUT_PEDIDO_INATIVO(body){
+    return{
+      url: API_URL + '/pedidos.php',
+      options: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      }
+    }
+  }
   export function POST_MATERIAL(body){
     return{
       url: API_URL + '/material.php',
@@ -58,6 +70,18 @@ export function POST_PEDIDO(body){
         body: JSON.stringify(body),
       }
     }
+  }
+    export function PUT_MATERIAL(body){
+      return{
+        url: API_URL + '/material.php',
+        options: {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body),
+        }
+      }
   }
   export function GET_MATERIAL(body){
     return{
@@ -131,3 +155,63 @@ export function POST_PEDIDO(body){
       }
     }
   }
+  export function PUT_FORNECEDOR_INATIVO(body){
+    return{
+      url: API_URL + '/fornecedor.php',
+      options: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      }
+    }
+  }
+  export function PUT_FORNECEDOR(body){
+    return{
+      url: API_URL + '/fornecedor.php',
+      options: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      }
+    }
+  }
+  export function PUT_MATERIAL_INATIVO(body){
+    return{
+      url: API_URL + '/material.php',
+      options: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      }
+    }
+  }
+  export function GET_MATERIAL_BY_ID(body){
+    return{
+      url: API_URL + '/material.php',
+      options: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      }
+    }
+  }
+export function GET_FORNECEDOR_BY_ID(body){
+  return{
+    url: API_URL + '/fornecedor.php',
+    options: {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+    }
+  }
+}
