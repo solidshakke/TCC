@@ -1,13 +1,14 @@
 import styles from './Materiais.module.css';
 import React, { useState, useEffect } from 'react';
-import { POST_MATERIAL, GET_MATERIAL, GET_MATERIAL_BY_ID, PUT_MATERIAL } from '../../components/api';
+import { POST_MATERIAL, GET_MATERIAL, GET_MATERIAL_BY_ID, PUT_MATERIAL, GET_FORNECEDOR_BY_ID } from '../../components/api';
 import useFetch2 from '../../hooks/useFetch2';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import Swal from 'sweetalert2'
 
-const MateriaisEdit = () => {
+const ViewMaterial = () => {
   const [searchParams] = useSearchParams();
   const cod_material = searchParams.get('cod')
+
+  const navigate = useNavigate();
 
   const [cod_sap, setCodSap] = useState("");
   const [nome, setNome] = useState("");
@@ -18,8 +19,6 @@ const MateriaisEdit = () => {
   const [materialId, setMaterialId] = useState(null); // ID do material a ser editado
 
   const { data, success, loading, error, request } = useFetch2();
-
-  const navigate = useNavigate();
 
   // Função para buscar os materiais cadastrados
   async function fetchMateriais() {
@@ -55,8 +54,7 @@ const MateriaisEdit = () => {
     const { json } = await request(url, options);
 
     if (json.success) {
-      mensagemOK("Material salvo com sucesso!");
-      navigate (`/create/materiais`)
+      console.log("Deu boa");
 
     } else {
       console.log("Erro ao salvar material");
@@ -68,62 +66,54 @@ const MateriaisEdit = () => {
     fetchMateriais();
   }, []);
   
-  function mensagemOK(msg) {
-    Swal.fire({
-      text: msg,
-      icon: "success"
-      }).then((result) => {
-      if (result.isConfirmed) {
-          window.location.reload();
-      }
-  });
-  }
-
   useEffect(() => {
-    async function get_material_by_id() {
-        const { url, options } = GET_MATERIAL_BY_ID({
-            requisicao: "GET_MATERIAL_BY_ID",
-            cod_material: cod_material
+    async function get_fornecedor_by_id() {
+        const { url, options } = GET_FORNECEDOR_BY_ID({
+            requisicao: "GET_FORNECEDOR_BY_ID",
+            cod_fornecedor: cod_fornecedor
         });
         const { json } = await request(url, options);
         if (json.success) {
-          editarMaterial(json.result);
+          editarFornecedor(json.result);
         } else {
-            console.log("Erro ao buscar material");
+            console.log("Erro ao buscar fornecedor");
         } 
     }
-    get_material_by_id();
+    get_fornecedor_by_id();
 
 }, [])
 
+function handleVoltar () {
+    navigate ('/create/materiais');
+}
 
   return (
     <div className={styles.material}>
       <h1>{isEdit ? "Editar Material" : "Cadastro de Material"}</h1>
-      <form onSubmit={handleSalvar}>
+
         <div>
           <label>
             <span>Código do Material: </span>
-            <input type="text" name="cod_sap" placeholder="Digite o código do Material" onChange={(e) => setCodSap(e.target.value)} value={cod_sap} />
+            <input type="text" name="cod_sap" placeholder="Digite o código do Material" onChange={(e) => setCodSap(e.target.value)} value={cod_sap} readOnly/>
           </label>
           <label>
             <span>Nome do Material: </span>
-            <input type="text" name="nome" placeholder="Digite o nome do material" required onChange={(e) => setNome(e.target.value)} value={nome} />
+            <input type="text" name="nome" placeholder="Digite o nome do material" required onChange={(e) => setNome(e.target.value)} value={nome} readOnly/>
           </label>
           <label>
             <span>CFOP: </span>
-            <input type="text" name="cfop" placeholder="Digite o CFOP do material" required onChange={(e) => setCfop(e.target.value)} value={cfop} />
+            <input type="text" name="cfop" placeholder="Digite o CFOP do material" required onChange={(e) => setCfop(e.target.value)} value={cfop} readOnly/>
           </label>
           <label>
             <span>NCM: </span>
-            <input type="text" name="ncm" placeholder="Digite a NCM do material" onChange={(e) => setNcm(e.target.value)} value={ncm} />
+            <input type="text" name="ncm" placeholder="Digite a NCM do material" onChange={(e) => setNcm(e.target.value)} value={ncm} readOnly/>
           </label>
-          <button className="btn" type="submit">{isEdit ? "Atualizar" : "Salvar"}</button>
+          <button className="btn" onClick={handleVoltar}>Voltar</button>
         </div>
-      </form>
+
 
     </div>
   );
 };
 
-export default MateriaisEdit;
+export default ViewMaterial;

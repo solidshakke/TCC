@@ -4,7 +4,7 @@ import { POST_MATERIAL } from '../../components/api';
 import { useState } from 'react';
 import useFetch2 from '../../hooks/useFetch2';
 import Showmateriais from './ShowMateriais';
-
+import Swal from 'sweetalert2'
 
 const Materiais = () => {
     const [cod_sap, setCodSap] = useState("");
@@ -25,12 +25,24 @@ const Materiais = () => {
       //console.log(json.success);
       //const message_aux = json.result;
       if (json.success){
-        console.log('Deu boa');
+        mensagemOK("Material salvo com sucesso!");
       } else {
         console.log('Deu ruim');
       }
      console.log (json);
     }
+
+    function mensagemOK(msg) {
+      Swal.fire({
+        text: msg,
+        icon: "success"
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.reload();
+        }
+    });
+    }
+
   return (
     <div className={styles.material}>
       <h1>Cadastro de Material</h1>

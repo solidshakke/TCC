@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from "./ShowMateriais.module.css";
 import useFetch2 from '../../hooks/useFetch2';
-import { GET_MATERIAL } from '../../components/api';
+import { GET_MATERIAL, PUT_MATERIAL_INATIVO } from '../../components/api';
 import { Navigate, useNavigate} from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 const Showmateriais = () => {
 
@@ -41,17 +42,18 @@ const Showmateriais = () => {
         setSelectedMateriais(null);
     };
 
-    const handleView = () => {
+    const handleView = (cod) => {
         // Função de Visualizar Pedido
-        alert(`Visualizar detalhes do pedido: ${selectedPedido.cod_pedido}`); {/* mudar cod_pedido para PO */}
+        alert(`Visualizar detalhes do pedido: ${cod}`); {/* mudar cod_pedido para PO */}
         // Aqui você poderia redirecionar para uma página de detalhes do pedido, por exemplo:
         // window.location.href = `/pedido/${selectedPedido.PO}`;
+        navigate (`/show/materiais?cod=${cod}`)
         closeModal();
     };
 
     const handleEdit = (cod) => {
         // Função de Editar Pedido
-        alert(`Editar pedido: ${cod}`); {/* mudar cod_pedido para PO selectedPedido.cod_pedido*/}
+        alert(`Editar material: ${cod}`); {/* mudar cod_pedido para PO selectedPedido.cod_pedido*/}
         // Aqui você poderia redirecionar para uma página de edição do pedido:
         // window.location.href = `/editar-pedido/${selectedPedido.PO}`;
         navigate (`/edit/materiais?cod=${cod}`)
@@ -59,17 +61,45 @@ const Showmateriais = () => {
         closeModal();  
     };
     
+    function msgDelete(cod, nome){
+        Swal.fire({
+            title: "Deseja inativar o material " + nome + "?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Inativar",
+            denyButtonText: "Manter"
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                handleDelete(cod);
 
-    const handleDelete = () => {
+            } else if (result.isDenied) {
+                Swal.fire("Opção de inativação cancelada", "", "info");
+            }
+        });
+    }
+    function mensagemOK(msg) {
+        Swal.fire({
+          text: msg,
+          icon: "success"
+          }).then((result) => {
+          if (result.isConfirmed) {
+              window.location.reload();
+          }
+      });
+      }
+
+    async function handleDelete (cod) {
         // Função de Excluir Pedido
-        const confirmDelete = window.confirm(`Tem certeza de que deseja excluir o pedido: ${selectedPedido.PO}?`); 
-        if (confirmDelete) {
-            // Lógica para excluir o pedido
-            // Exemplo: Remover o pedido do estado local
-            setDatas(prevDatas => prevDatas.filter(pedido => pedido.PO !== selectedPedido.PO));
-            alert(`Pedido ${selectedPedido.PO} excluído com sucesso!`);
-            closeModal();
-        }
+        const {url, options} = PUT_MATERIAL_INATIVO ({
+        requisicao: 'PUT_MATERIAL_INATIVO',
+        cod_material: cod
+        });
+        const {json} = await request (url, options);
+        if (json.success) {
+            mensagemOK("Inativado com sucesso!");
+        } else {console.log(json.error)};
+
     };
 
     return (
@@ -111,9 +141,9 @@ const Showmateriais = () => {
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                         <h3>Opções do Material</h3>
                         <p>Material: {selectedMateriais?.cod_sap}</p> {/* mudar cod_pedido para PO */}
-                        <button onClick={handleView}>Visualizar Material</button>
-                        <button onClick={() => handleEdit (selectedMateriais?.cod_sap)}>Editar Material</button>
-                        <button onClick={handleDelete}>Excluir Material</button>
+                        <button onClick={() => handleView (selectedMateriais?.cod_material)}>Visualizar Material</button>
+                        <button onClick={() => handleEdit (selectedMateriais?.cod_material)}>Editar Material</button>
+                        <button onClick={() => msgDelete (selectedMateriais?.cod_material, selectedMateriais?.nome)}>Excluir Material</button>
                         <button className={styles.closeButton} onClick={closeModal}>Fechar</button>
                     </div>
                 </div>
