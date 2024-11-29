@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styles from "./ShowFornecedor.module.css";
 import useFetch2 from '../../hooks/useFetch2';
-import { GET_FORNECEDOR } from '../../components/api';
+import { GET_FORNECEDOR, PUT_FORNECEDOR_INATIVO } from '../../components/api';
 import { Navigate, useNavigate} from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 const ShowFornecedor = () => {
 
-
+    
     const colunas_banco = ['cod_sap', 'nome'];
     const cabecalhoTabela = ['Código', 'Nome', 'Opções'];
     const [datas, setDatas] = useState([]);
@@ -41,17 +42,18 @@ const ShowFornecedor = () => {
         setSelectedFornecedor(null);
     };
 
-    const handleView = () => {
+    const handleView = (cod) => {
         // Função de Visualizar Pedido
-        alert(`Visualizar detalhes do pedido: ${selectedPedido.cod_pedido}`); {/* mudar cod_pedido para PO */}
+        alert(`Visualizar detalhes do pedido: ${cod}`); {/* mudar cod_pedido para PO */}
         // Aqui você poderia redirecionar para uma página de detalhes do pedido, por exemplo:
         // window.location.href = `/pedido/${selectedPedido.PO}`;
+        navigate (`/show/fornecedor?cod=${cod}`)
         closeModal();
     };
 
     const handleEdit = (cod) => {
         // Função de Editar Pedido
-        alert(`Editar pedido: ${cod}`); {/* mudar cod_pedido para PO selectedPedido.cod_pedido*/}
+        alert(`Editar fornecedor: ${cod}`); {/* mudar cod_pedido para PO selectedPedido.cod_pedido*/}
         // Aqui você poderia redirecionar para uma página de edição do pedido:
         // window.location.href = `/editar-pedido/${selectedPedido.PO}`;
         navigate (`/edit/fornecedor?cod=${cod}`)
@@ -59,17 +61,45 @@ const ShowFornecedor = () => {
         closeModal();  
     };
     
+    function msgDelete(cod, nome){
+        Swal.fire({
+            title: "Deseja inativar o fornecedor " + nome + "?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Inativar",
+            denyButtonText: "Manter"
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                handleDelete(cod);
 
-    const handleDelete = () => {
+            } else if (result.isDenied) {
+                Swal.fire("Opção de inativação cancelada", "", "info");
+            }
+        });
+    }
+    function mensagemOK(msg) {
+        Swal.fire({
+          text: msg,
+          icon: "success"
+          }).then((result) => {
+          if (result.isConfirmed) {
+              window.location.reload();
+          }
+      });
+      }
+    async function handleDelete (cod) {
         // Função de Excluir Pedido
-        const confirmDelete = window.confirm(`Tem certeza de que deseja excluir o pedido: ${selectedPedido.PO}?`); 
-        if (confirmDelete) {
-            // Lógica para excluir o pedido
-            // Exemplo: Remover o pedido do estado local
-            setDatas(prevDatas => prevDatas.filter(pedido => pedido.PO !== selectedPedido.PO));
-            alert(`Pedido ${selectedPedido.PO} excluído com sucesso!`);
-            closeModal();
-        }
+        const {url, options} = PUT_FORNECEDOR_INATIVO ({
+        requisicao: 'PUT_FORNECEDOR_INATIVO',
+        cod_fornecedor: cod
+        });
+        const {json} = await request (url, options);
+        if (json.success) {
+            mensagemOK("Inativado com sucesso!");
+
+        } else {console.log(json.error)};
+
     };
 
     return (
@@ -111,9 +141,9 @@ const ShowFornecedor = () => {
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                         <h3>Opções do Fornecedor</h3>
                         <p>Fornecedor: {selectedFornecedor?.cod_sap}</p> {/* mudar cod_pedido para PO */}
-                        <button onClick={handleView}>Visualizar Fornecedor</button>
-                        <button onClick={() => handleEdit (selectedFornecedor?.cod_sap)}>Editar Fornecedor</button>
-                        <button onClick={handleDelete}>Excluir Fornecedor</button>
+                        <button onClick={() => handleView (selectedFornecedor?.cod_fornecedor)}>Visualizar Fornecedor</button>
+                        <button onClick={() => handleEdit (selectedFornecedor?.cod_fornecedor)}>Editar Fornecedor</button>
+                        <button onClick={() => msgDelete (selectedFornecedor?.cod_fornecedor, selectedFornecedor?.nome)}>Excluir Fornecedor</button>
                         <button className={styles.closeButton} onClick={closeModal}>Fechar</button>
                     </div>
                 </div>

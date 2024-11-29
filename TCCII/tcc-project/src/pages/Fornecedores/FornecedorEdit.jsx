@@ -1,9 +1,15 @@
 import styles from './Fornecedor.module.css';
 import React, { useState, useEffect } from 'react';
 import useFetch2 from '../../hooks/useFetch2';
-import { POST_FORNECEDOR, GET_FORNECEDOR } from '../../components/api';
+import { POST_FORNECEDOR, GET_FORNECEDOR, GET_FORNECEDOR_BY_ID, PUT_FORNECEDOR } from '../../components/api';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 const FornecedorEdit = () => {
+
+  const [searchParams] = useSearchParams();
+  const cod_fornecedor = searchParams.get('cod')
+
   const [cod_sap, setCodSap] = useState("");
   const [nome, setNome] = useState("");
   const [moeda, setMoeda] = useState("");
@@ -14,6 +20,8 @@ const FornecedorEdit = () => {
 
   const { data, success, loading, error, request } = useFetch2();
 
+  const navigate = useNavigate();
+
   // Função para buscar os fornecedores cadastrados
   async function fetchFornecedores() {
     const { url, options } = GET_FORNECEDOR(); // Função que deve retornar as opções para buscar os fornecedores
@@ -23,52 +31,65 @@ const FornecedorEdit = () => {
     }
   }
 
-  // Função para carregar um fornecedor para edição
-  function editarFornecedor(fornecedor) {
-    setCodSap(fornecedor.cod_sap);
-    setNome(fornecedor.nome);
-    setMoeda(fornecedor.moeda);
-    setIncoterm(fornecedor.incoterm);
-    setFornecedorId(fornecedor.id); // Armazena o ID do fornecedor para edição
-    setIsEdit(true);
+async function handleSalvar(event) {
+  event.preventDefault();
+  
+  const { url, options } = PUT_FORNECEDOR({
+    requisicao: 'PUT_FORNECEDOR',
+    cod_fornecedor: cod_fornecedor,
+    cod_sap: cod_sap,
+    nome: nome,
+    moeda: moeda,
+    incoterm: incoterm,
+  });
+  const { json } = await request(url, options);
+
+  if (json.success) {
+    mensagemOK ("Fornecedor salvo com sucesso!");
+    navigate (`/create/fornecedor`)
+
+  } else {
+    console.log("Erro ao salvar fornecedor");
   }
+}
+function editarFornecedor(fornecedor) {
+  setCodSap(fornecedor[0].cod_sap);
+  setIncoterm(fornecedor[0].incoterm);
+  setMoeda(fornecedor[0].moeda);
+  setNome(fornecedor[0].nome);
 
-  // Função para salvar ou atualizar o fornecedor
-  async function handleSalvar(event) {
-    event.preventDefault();
-    
-    const { url, options } = POST_FORNECEDOR({
-      requisicao: isEdit ? 'UPDATE_FORNECEDOR' : 'POST_FORNECEDOR',
-      id: fornecedorId, // Envia o ID do fornecedor para atualização
-      cod_sap: cod_sap,
-      nome: nome,
-      moeda: moeda,
-      incoterm: incoterm,
-    });
-    const { json } = await request(url, options);
-
-    if (json.success) {
-      console.log(isEdit ? 'Fornecedor atualizado com sucesso' : 'Fornecedor salvo com sucesso');
-      setCodSap("");
-      setNome("");
-      setMoeda("");
-      setIncoterm("");
-      setFornecedorId(null);
-      setIsEdit(false);
-      fetchFornecedores(); // Atualiza a lista de fornecedores
-    } else {
-      console.log("Erro ao salvar fornecedor");
-    }
-  }
-
-  // useEffect para buscar os fornecedores ao carregar o componente
+  setIsEdit(true);
+}
   useEffect(() => {
-    fetchFornecedores();
-  }, []);
+    async function get_fornecedor_by_id() {
+        const { url, options } = GET_FORNECEDOR_BY_ID({
+            requisicao: "GET_FORNECEDOR_BY_ID",
+            cod_fornecedor: cod_fornecedor
+        });
+        const { json } = await request(url, options);
+        if (json.success) {
+          editarFornecedor(json.result);
+        } else {
+            console.log("Erro ao buscar fornecedor");
+        } 
+    }
+    get_fornecedor_by_id();
+
+}, [])
+function mensagemOK(msg) {
+  Swal.fire({
+    text: msg,
+    icon: "success"
+    }).then((result) => {
+    if (result.isConfirmed) {
+        window.location.reload();
+    }
+});
+}
 
   return (
     <div className={styles.fornecedor}>
-      <h1>{isEdit ? "Editar Fornecedor" : "Cadastro de Fornecedor"}</h1>
+      <h1>Editar Fornecedor</h1>
       <form onSubmit={handleSalvar}>
         <div>
           <label>
@@ -87,26 +108,10 @@ const FornecedorEdit = () => {
             <span>Incoterm: </span>
             <input type="text" name="incoterm" placeholder="Digite a Incoterm" onChange={(e) => setIncoterm(e.target.value)} value={incoterm} />
           </label>
-          <button className="btn" type="submit">{isEdit ? "Atualizar" : "Salvar"}</button>
+          <button className="btn" type="submit">Atualizar</button>
         </div>
       </form>
-
-      <h2>Fornecedores Cadastrados</h2>
-      <ul>
-        {fornecedores.length > 0 ? (
-          fornecedores.map((fornecedor) => (
-            <li key={fornecedor.id}>
-              <strong>Código:</strong> {fornecedor.cod_sap} <br />
-              <strong>Nome:</strong> {fornecedor.nome} <br />
-              <strong>Moeda:</strong> {fornecedor.moeda} <br />
-              <strong>Incoterm:</strong> {fornecedor.incoterm} <br />
-              <button onClick={() => editarFornecedor(fornecedor)}>Editar</button>
-            </li>
-          ))
-        ) : (
-          <p>Nenhum fornecedor cadastrado.</p>
-        )}
-      </ul>
+    
     </div>
   );
 };

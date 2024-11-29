@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import useFetch2 from '../../hooks/useFetch2';
 import { POST_FORNECEDOR, GET_FORNECEDOR } from '../../components/api';
 import ShowFornecedor from './ShowFornecedor';
+import Swal from 'sweetalert2'
 
 const Fornecedor = () => {
     const [cod_sap, setCodSap] = useState("");
@@ -12,6 +13,18 @@ const Fornecedor = () => {
     const [incoterm, setIncoterm] = useState("");
     const [fornecedor, setFornecedor] = useState("");
     const { data, success, loading, error, request } = useFetch2();
+
+    function mensagemOK(msg) {
+      Swal.fire({
+        text: msg,
+        icon: "success"
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.reload();
+        }
+    });
+    }
+
     async function handleSalvar(){
       const {url, options} = POST_FORNECEDOR({
         requisicao: 'POST_FORNECEDOR',
@@ -25,7 +38,8 @@ const Fornecedor = () => {
       //console.log(json.success);
       //const message_aux = json.result;
       if (json.success){
-        console.log('Deu boa');
+        mensagemOK("Fornecedor salvo com sucesso!");
+
       } else {
         console.log('Deu ruim');
       }
@@ -69,21 +83,7 @@ const Fornecedor = () => {
         <button className="btn" onClick={handleSalvar}>Salvar</button>
       </div>
       {/*</form>*/}
-             <h2>Fornecedores Cadastrados</h2>
-      <ul>
-        {fornecedor.length > 0 ? (
-           fornecedor.map((fornecedor, index) => (
-             <li key={index}>
-               <strong>Código:</strong> {fornecedor.cod_sap} <br />
-               <strong>Nome:</strong> {fornecedor.nome} <br />
-               <strong>Moeda:</strong> {fornecedor.moeda} <br />
-              <strong>Incoterm:</strong> {fornecedor.incoterm}
-             </li>
-           ))
-         ) : (
-           <p>Nenhum fornecedor cadastrado.</p>
-         )}
-       </ul>
+
        <ShowFornecedor />
     </div>
   );
